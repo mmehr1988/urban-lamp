@@ -1,0 +1,25 @@
+{
+  "name": "urban-lamp",
+  "version": "1.0.0",
+  "description": "MySQL2 command line employee tracker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmehr1988/urban-lamp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mmehr1988/urban-lamp/issues"
+  },
+  "homepage": "https://github.com/mmehr1988/urban-lamp#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "inquirer": "^8.1.2",
+    "mysql2": "^2.3.0"
+  }
+}
