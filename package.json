@@ -2,9 +2,12 @@
   "name": "urban-lamp",
   "version": "1.0.0",
   "description": "MySQL2 command line employee tracker",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "seeds": "node seeds/companySeeds.js",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -18,9 +21,14 @@
   },
   "homepage": "https://github.com/mmehr1988/urban-lamp#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "console.table": "^0.10.0",
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
     "inquirer": "^8.1.2",
-    "mysql2": "^2.3.0"
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.0",
+    "nodemon": "^2.0.12",
+    "sequelize": "^6.6.5"
   }
 }
