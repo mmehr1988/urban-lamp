@@ -3,14 +3,7 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Department extends Model {
-  getDepartmentId() {
-    return this.id;
-  }
-  getDepartmentName() {
-    return this.id;
-  }
-}
+class Department extends Model {}
 
 Department.init(
   {

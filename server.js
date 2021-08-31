@@ -4,7 +4,7 @@ const inquirer = require('inquirer');
 const express = require('express');
 const routes = require('./routes');
 const sequelize = require('./config/connection');
-
+const cTable = require('console.table');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -21,11 +21,11 @@ app.use(routes);
 // File Paths
 ////////////////////////////////////////////////////////////
 
-const { masterQuestions, idManagerCheck } = require('./lib/Questions.js');
-const { dataQueryGet, dataQueryPostDepartment, dataQueryPostRole, dataQueryPostEmployee, dataQueryPutRole } = require('./query/queryMaster.js');
+const { masterQuestions } = require('./lib/Questions.js');
+const { dataQueryGetAll, dataQueryPostDepartment, dataQueryPostRole, dataQueryPostEmployee, dataQueryPutRole } = require('./query/queryMaster.js');
 
 ////////////////////////////////////////////////////////////
-// PROMPTS
+// PROMPTS: CONFIRM
 ////////////////////////////////////////////////////////////
 
 async function confirmQuery() {
@@ -58,12 +58,74 @@ async function confirmQuery() {
   }
 }
 
+////////////////////////////////////////////////////////////
+// PROMPTS: GET ALL
+////////////////////////////////////////////////////////////
+// COMPLETE
+async function viewDepartments() {
+  const getDepartments = await dataQueryGetAll('department');
+  console.table(getDepartments);
+  await confirmQuery();
+}
+// COMPLETE
+async function viewRoles() {
+  const getRoles = await dataQueryGetAll('role');
+  console.table(getRoles);
+  await confirmQuery();
+}
+// COMPLETE
+async function viewEmployees() {
+  const getEmployees = await dataQueryGetAll('employee');
+  console.table(getEmployees);
+  await confirmQuery();
+}
+
+////////////////////////////////////////////////////////////
+// PROMPTS: POST
+////////////////////////////////////////////////////////////
+// COMPLETE
+async function addDepartment() {
+  const nDepartment = await inquirer.prompt(masterQuestions.addDepartment);
+  const postDepartment = await dataQueryPostDepartment(nDepartment.nameDepartment);
+  console.table(postDepartment);
+  await confirmQuery();
+}
+// COMPLETE
+async function addRole() {
+  const nRole = await inquirer.prompt(masterQuestions.addRole);
+  const getDepartments = await dataQueryGetAll('department');
+  const departmentId = getDepartments.find((array) => array.name === nRole.roleDepartment).id;
+  const postRole = await dataQueryPostRole(nRole.roleTitle, nRole.roleSalary, departmentId);
+  console.table(postRole);
+  await confirmQuery();
+}
+// COMPLETE
+async function addEmployee() {
+  const nEmployee = await inquirer.prompt(masterQuestions.addEmployee);
+  // Role Id Query based On Role title
+  const getRoles = await dataQueryGetAll('role');
+  const roleId = await getRoles.find((array) => array.title === nEmployee.employeeRole).id;
+
+  // Manager Id Query based On Existing Employees
+  const getEmployees = await dataQueryGetAll('employee');
+  const managerId = await getEmployees.find((array) => array.role_id === roleId).manager_id;
+
+  // Create Employee
+  const postEmployee = await dataQueryPostEmployee(nEmployee.employeeFirstName, nEmployee.employeeLastName, roleId, managerId);
+  console.table(postEmployee);
+  await confirmQuery();
+}
+
+////////////////////////////////////////////////////////////
+// PROMPTS: PUT
+////////////////////////////////////////////////////////////
+
 async function updateEmployeeRole() {
   const uEmployeeRole = await inquirer.prompt(masterQuestions.updateEmployeeRole);
   const nameSplit = uEmployeeRole.employeeUpdateName.split(' ');
 
   // Manager Id Query based On Existing Employees
-  const getEmployees = await dataQueryGet('employee');
+  const getEmployees = await dataQueryGetAll('employee');
 
   // To Get Employee Id
   let employeeId = '';
@@ -76,66 +138,16 @@ async function updateEmployeeRole() {
   });
 
   // To Get Role Id
-  const getRoles = await dataQueryGet('role');
+  const getRoles = await dataQueryGetAll('role');
   const roleId = await getRoles.find((array) => array.title === uEmployeeRole.employeeNewRole).id;
 
   // Manager Id Query based On Existing Employees
-  const findEmployees = await dataQueryGet('employee');
+  const findEmployees = await dataQueryGetAll('employee');
   const findManagerId = await findEmployees.find((array) => array.role_id === roleId).manager_id;
 
   // Update Employee Info
-  const putRole = await dataQueryPutRole(`employee/${employeeId}`, nameSplit[0], nameSplit[1], roleId, findManagerId);
+  const putRole = await dataQueryPutRole(employeeId, nameSplit[0], nameSplit[1], roleId, findManagerId);
   console.table(putRole);
-  await confirmQuery();
-}
-
-async function addEmployee() {
-  const nEmployee = await inquirer.prompt(masterQuestions.addEmployee);
-  // Role Id Query based On Role title
-  const getRoles = await dataQueryGet('role');
-  const roleId = await getRoles.find((array) => array.title === nEmployee.employeeRole).id;
-
-  // Manager Id Query based On Existing Employees
-  const getEmployees = await dataQueryGet('employee');
-  const managerId = await getEmployees.find((array) => array.role_id === roleId).manager_id;
-
-  // Create Employee
-  const postEmployee = await dataQueryPostEmployee('employee', nEmployee.employeeFirstName, nEmployee.employeeLastName, roleId, managerId);
-  console.table(postEmployee);
-  await confirmQuery();
-}
-
-async function addRole() {
-  const nRole = await inquirer.prompt(masterQuestions.addRole);
-  const getDepartments = await dataQueryGet('department');
-  const departmentId = getDepartments.find((array) => array.name === nRole.roleDepartment).id;
-  const postRole = await dataQueryPostRole('role', nRole.roleTitle, nRole.roleSalary, departmentId);
-  console.table(postRole);
-  await confirmQuery();
-}
-
-async function addDepartment() {
-  const nDepartment = await inquirer.prompt(masterQuestions.addDepartment);
-  const postDepartment = await dataQueryPostDepartment('department', nDepartment.nameDepartment);
-  console.table(postDepartment);
-  await confirmQuery();
-}
-
-async function viewDepartments() {
-  const getDepartments = await dataQueryGet('department');
-  console.table(getDepartments);
-  await confirmQuery();
-}
-
-async function viewEmployees() {
-  const getEmployees = await dataQueryGet('employee');
-  console.table(getEmployees);
-  await confirmQuery();
-}
-
-async function viewRoles() {
-  const getRoles = await dataQueryGet('role');
-  console.table(getRoles);
   await confirmQuery();
 }
 

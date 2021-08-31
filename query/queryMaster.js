@@ -1,44 +1,52 @@
 'use strict';
 
-const apiGet = require('./queryGet.js');
-const { apiPostDepartment, apiPostRole, apiPostEmployee } = require('./queryPost.js');
-const { apiPutRole } = require('./queryPut.js');
-
 ////////////////////////////////////////////////////////////
-// GET + POST + PUT + DELETE
+// GET = READ
 ////////////////////////////////////////////////////////////
-
-// GET data
-async function dataQueryGet(url) {
-  const getQuery = await apiGet.getData(url);
+const { directGetAll } = require('./queryGet.js');
+// COMPLETE
+async function dataQueryGetAll(url) {
+  const getQuery = await directGetAll(url);
   return getQuery;
 }
 
-// Post Department
-async function dataQueryPostDepartment(url, depName) {
-  const postQueryDepartment = await apiPostDepartment.postDataDepartment(url, depName);
+////////////////////////////////////////////////////////////
+// POST = CREATE
+////////////////////////////////////////////////////////////
+
+const { apiPostDepartment, apiPostRole, apiPostEmployee } = require('./queryPost.js');
+
+// DEPARTMENT COMPLETE
+async function dataQueryPostDepartment(depName) {
+  const postQueryDepartment = await apiPostDepartment(depName);
   return postQueryDepartment;
 }
 
-// Post Role
-async function dataQueryPostRole(url, roleTitle, roleSalary, roleDepId) {
-  const postQueryRole = await apiPostRole.postDataRole(url, roleTitle, roleSalary, roleDepId);
+// ROLE COMPLETE
+async function dataQueryPostRole(roleTitle, roleSalary, roleDepId) {
+  const postQueryRole = await apiPostRole(roleTitle, roleSalary, roleDepId);
   return postQueryRole;
 }
 
-// Post Employee
-async function dataQueryPostEmployee(url, employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId) {
-  const postQueryEmployee = await apiPostEmployee.postDataEmployee(url, employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId);
+// EMPLOYEE COMPLETE
+async function dataQueryPostEmployee(employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId) {
+  const postQueryEmployee = await apiPostEmployee(employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId);
   return postQueryEmployee;
 }
 
-// Put Employee
-async function dataQueryPutRole(url, employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId) {
-  const putQueryRole = await apiPutRole.updateEmployeeRole(url, employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId);
+////////////////////////////////////////////////////////////
+// PUT = UPDATE
+////////////////////////////////////////////////////////////
+
+const { apiPutRole } = require('./queryPut.js');
+
+// EMPLOYEE ROLE UPDATE COMPLETE
+async function dataQueryPutRole(employeeId, employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId) {
+  const putQueryRole = await apiPutRole(employeeId, employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId);
   return putQueryRole;
 }
 
-exports.dataQueryGet = dataQueryGet;
+exports.dataQueryGetAll = dataQueryGetAll;
 exports.dataQueryPostDepartment = dataQueryPostDepartment;
 exports.dataQueryPostRole = dataQueryPostRole;
 exports.dataQueryPostEmployee = dataQueryPostEmployee;

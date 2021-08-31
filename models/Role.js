@@ -4,20 +4,7 @@ const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 const Department = require('./Department');
 
-class Role extends Model {
-  getRoleId() {
-    return this.id;
-  }
-  getRoleTitle() {
-    return this.id;
-  }
-  getRoleSalary() {
-    return this.id;
-  }
-  getRoleDepartment() {
-    return this.id;
-  }
-}
+class Role extends Model {}
 
 Role.init(
   {

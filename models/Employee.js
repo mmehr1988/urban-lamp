@@ -3,20 +3,7 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Employee extends Model {
-  getEmployeeName() {
-    return [this.first_name, this.last_name].join(' ');
-  }
-  getEmployeeId() {
-    return this.id;
-  }
-  getEmployeeRoleId() {
-    return this.role_id;
-  }
-  getEmployeeManagerId() {
-    return this.manager_id;
-  }
-}
+class Employee extends Model {}
 
 Employee.init(
   {
