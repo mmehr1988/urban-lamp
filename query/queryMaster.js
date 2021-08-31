@@ -1,49 +1,82 @@
 'use strict';
 
+const Department = require('../models/Department');
+const Employee = require('../models/Employee');
+const Role = require('../models/Role');
+
 ////////////////////////////////////////////////////////////
 // GET = READ
 ////////////////////////////////////////////////////////////
-const { directGetAll } = require('./queryGet.js');
-// COMPLETE
+
 async function dataQueryGetAll(url) {
-  const getQuery = await directGetAll(url);
-  return getQuery;
+  if (url === 'department') {
+    const departments = await Department.findAll({ raw: true });
+    return departments;
+  } else if (url === 'role') {
+    const role = await Role.findAll({ raw: true });
+    return role;
+  } else if (url === 'employee') {
+    const employee = await Employee.findAll({ raw: true });
+    return employee;
+  } else {
+    console.log('Something went wrong');
+  }
 }
 
 ////////////////////////////////////////////////////////////
 // POST = CREATE
 ////////////////////////////////////////////////////////////
 
-const { apiPostDepartment, apiPostRole, apiPostEmployee } = require('./queryPost.js');
-
-// DEPARTMENT COMPLETE
+// DEPARTMENT
 async function dataQueryPostDepartment(depName) {
-  const postQueryDepartment = await apiPostDepartment(depName);
-  return postQueryDepartment;
+  try {
+    const createDepartment = await Department.create({ name: depName }).then((data) => data.get({ raw: true }));
+    return createDepartment;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-// ROLE COMPLETE
+// ROLE
 async function dataQueryPostRole(roleTitle, roleSalary, roleDepId) {
-  const postQueryRole = await apiPostRole(roleTitle, roleSalary, roleDepId);
-  return postQueryRole;
+  try {
+    const createRole = await Role.create({ title: roleTitle, salary: roleSalary, department_id: roleDepId }).then((data) => data.get({ raw: true }));
+    return createRole;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-// EMPLOYEE COMPLETE
+// EMPLOYEE
 async function dataQueryPostEmployee(employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId) {
-  const postQueryEmployee = await apiPostEmployee(employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId);
-  return postQueryEmployee;
+  try {
+    const createEmployee = await Employee.create({ first_name: employeeFirstName, last_name: employeeLastName, role_id: employeeRoleId, manager_id: employeeManagerId }).then((data) => data.get({ raw: true }));
+    return createEmployee;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 ////////////////////////////////////////////////////////////
 // PUT = UPDATE
 ////////////////////////////////////////////////////////////
 
-const { apiPutRole } = require('./queryPut.js');
-
-// EMPLOYEE ROLE UPDATE COMPLETE
+// EMPLOYEE ROLE UPDATE
 async function dataQueryPutRole(employeeId, employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId) {
-  const putQueryRole = await apiPutRole(employeeId, employeeFirstName, employeeLastName, employeeRoleId, employeeManagerId);
-  return putQueryRole;
+  try {
+    const updateEmployee = await Employee.findOne({ where: { id: employeeId } });
+
+    updateEmployee.first_name = employeeFirstName;
+    updateEmployee.last_name = employeeLastName;
+    updateEmployee.role_id = employeeRoleId;
+    updateEmployee.manager_id = employeeManagerId;
+
+    const saveUpdateEmployee = await updateEmployee.save().then((data) => data.get({ raw: true }));
+
+    return saveUpdateEmployee;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 exports.dataQueryGetAll = dataQueryGetAll;
