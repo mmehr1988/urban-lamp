@@ -77,7 +77,6 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete route for a role with a matching id
-// BUG when you delete, the id needs to be deleted as it skips currently when you create a new role
 router.delete('/:id', async (req, res) => {
   // Looks for the role based id given in the request parameters
   const id = req.params.id;

@@ -29,14 +29,4 @@ Department.init(
   }
 );
 
-// Department.belongsToMany(Employee, {
-//   through: Role,
-//   foreignKey: 'role_id',
-// });
-
-// Employee.hasOne(Department, {
-//   through: Role,
-//   foreignKey: 'role_id',
-// });
-
 module.exports = Department;

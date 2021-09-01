@@ -62,6 +62,9 @@ async function confirmQuery() {
     case 'Delete Role':
       await deleteRole();
       break;
+    case 'Get Employee By Manager':
+      await byEmployeeManager();
+      break;
     default:
       console.log('Try Again');
   }
@@ -243,6 +246,37 @@ async function updateEmployeeRole() {
   // Update Employee Info
   const putRole = await dataQueryPutRole(employeeId, nameSplit[0], nameSplit[1], roleId, findManagerId);
   console.table(putRole);
+  await confirmQuery();
+}
+
+////////////////////////////////////////////////////////////
+// PROMPTS: EMPLOYEE BY MANAGER
+////////////////////////////////////////////////////////////
+
+async function byEmployeeManager() {
+  const qEmployeeManager = await inquirer.prompt(masterQuestions.byEmployeeManager);
+  const nameSplit = qEmployeeManager.byManagerName.split(' ');
+
+  console.log(nameSplit);
+  // // Manager Id Query based On Existing Employees
+  const getEmployees = await dataQueryGetAll('employee');
+
+  // To Manager Employee Id
+  let managerId = '';
+  getEmployees.forEach(function (v, i, r) {
+    if (v.first_name === nameSplit[0] && v.last_name === nameSplit[1]) {
+      managerId = v.id;
+    } else {
+      return 'nothing';
+    }
+  });
+
+  // Filter employees with managerId
+  var filtered = getEmployees.filter((id) => id.manager_id === managerId);
+
+  console.log(`The below employees report to Manager ${qEmployeeManager.byManagerName}`);
+
+  console.table(filtered);
   await confirmQuery();
 }
 
