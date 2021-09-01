@@ -22,7 +22,7 @@ app.use(routes);
 ////////////////////////////////////////////////////////////
 
 const { masterQuestions } = require('./lib/Questions.js');
-const { dataQueryGetAll, dataQueryPostDepartment, dataQueryPostRole, dataQueryPostEmployee, dataQueryPutRole } = require('./query/queryMaster.js');
+const { dataQueryGetAll, dataQueryGetOne, dataQueryPostDepartment, dataQueryPostRole, dataQueryPostEmployee, dataQueryPutRole, dataQueryDeleteMaster } = require('./query/queryMaster.js');
 
 ////////////////////////////////////////////////////////////
 // PROMPTS: CONFIRM
@@ -53,9 +53,104 @@ async function confirmQuery() {
     case 'Update Employee Role':
       await updateEmployeeRole();
       break;
+    case 'Delete Employee':
+      await deleteEmployee();
+      break;
+    case 'Delete Department':
+      await deleteDepartment();
+      break;
+    case 'Delete Role':
+      await deleteRole();
+      break;
     default:
       console.log('Try Again');
   }
+}
+
+////////////////////////////////////////////////////////////
+// PROMPTS: DELETE
+////////////////////////////////////////////////////////////
+
+// COMPLETE
+async function deleteEmployee() {
+  const dEmployee = await inquirer.prompt(masterQuestions.deleteEmployee);
+
+  const nameSplit = dEmployee.employeeDelete.split(' ');
+
+  // Manager Id Query based On Existing Employees
+  const getEmployees = await dataQueryGetAll('employee');
+
+  // To Get Employee Id
+  let employeeToDelete = [];
+  let employeeId = '';
+  getEmployees.forEach(function (v, i, r) {
+    if (v.first_name === nameSplit[0] && v.last_name === nameSplit[1]) {
+      employeeId = v.id;
+    } else {
+      return 'nothing';
+    }
+  });
+
+  const employeeInfo = await dataQueryGetOne('employee', employeeId);
+  employeeToDelete.push(employeeInfo);
+
+  await dataQueryDeleteMaster('employee', employeeId);
+
+  console.table('Employee Has Been Removed From Database');
+  console.table(employeeToDelete);
+  await confirmQuery();
+}
+
+// COMPLETE
+async function deleteDepartment() {
+  const dDepartment = await inquirer.prompt(masterQuestions.deleteDepartment);
+
+  const getDepartments = await dataQueryGetAll('department');
+
+  let departmentToDelete = [];
+  let departmentId = '';
+  getDepartments.forEach(function (v, i, r) {
+    if (v.name === dDepartment.departmentDelete) {
+      departmentId = v.id;
+    } else {
+      return 'nothing';
+    }
+  });
+
+  const departmentInfo = await dataQueryGetOne('department', departmentId);
+  departmentToDelete.push(departmentInfo);
+
+  await dataQueryDeleteMaster('department', departmentId);
+
+  console.table('Department Has Been Removed From Database');
+  console.table(departmentToDelete);
+  await confirmQuery();
+}
+
+// COMPLETE
+async function deleteRole() {
+  const dRole = await inquirer.prompt(masterQuestions.deleteRole);
+
+  const getRoles = await dataQueryGetAll('role');
+
+  let roleToDelete = [];
+  let roleId = '';
+  getRoles.forEach(function (v, i, r) {
+    if (v.title === dRole.roleDelete) {
+      roleId = v.id;
+    } else {
+      return 'nothing';
+    }
+  });
+
+  const roleInfo = await dataQueryGetOne('role', roleId);
+  roleToDelete.push(roleInfo);
+
+  await dataQueryDeleteMaster('role', roleId);
+
+  console.table('Role Has Been Removed From Database');
+  console.table(roleToDelete);
+  await confirmQuery();
 }
 
 ////////////////////////////////////////////////////////////
@@ -119,7 +214,7 @@ async function addEmployee() {
 ////////////////////////////////////////////////////////////
 // PROMPTS: PUT
 ////////////////////////////////////////////////////////////
-
+// COMPLETE
 async function updateEmployeeRole() {
   const uEmployeeRole = await inquirer.prompt(masterQuestions.updateEmployeeRole);
   const nameSplit = uEmployeeRole.employeeUpdateName.split(' ');
@@ -160,7 +255,7 @@ async function main() {
     await sequelize.sync({ force: false });
     await app.listen(PORT);
     await confirmQuery();
-    console.log(`Now listening to http://localhost:${PORT}`);
+    // console.log(`Now listening to http://localhost:${PORT}`);
   } catch (err) {
     console.log(err);
   }

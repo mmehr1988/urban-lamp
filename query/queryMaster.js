@@ -13,10 +13,29 @@ async function dataQueryGetAll(url) {
     const departments = await Department.findAll({ raw: true });
     return departments;
   } else if (url === 'role') {
-    const role = await Role.findAll({ raw: true });
+    const roles = await Role.findAll({ raw: true });
+    return roles;
+  } else if (url === 'employee') {
+    const employees = await Employee.findAll({ raw: true });
+    return employees;
+  } else {
+    console.log('Something went wrong');
+  }
+}
+
+////////////////////////////////////////////////////////////
+// GET ONE = READ
+////////////////////////////////////////////////////////////
+
+async function dataQueryGetOne(url, id) {
+  if (url === 'department') {
+    const department = await Department.findOne({ where: { id } }).then((data) => data.get({ raw: true }));
+    return department;
+  } else if (url === 'role') {
+    const role = await Role.findOne({ where: { id } }).then((data) => data.get({ raw: true }));
     return role;
   } else if (url === 'employee') {
-    const employee = await Employee.findAll({ raw: true });
+    const employee = await Employee.findOne({ where: { id } }).then((data) => data.get({ raw: true }));
     return employee;
   } else {
     console.log('Something went wrong');
@@ -79,8 +98,29 @@ async function dataQueryPutRole(employeeId, employeeFirstName, employeeLastName,
   }
 }
 
+////////////////////////////////////////////////////////////
+// DELETE = DESTROY
+////////////////////////////////////////////////////////////
+
+async function dataQueryDeleteMaster(url, id) {
+  if (url === 'department') {
+    const deleteDepartment = await Department.destroy({ where: { id } });
+    return deleteDepartment;
+  } else if (url === 'role') {
+    const deleteRole = await Role.destroy({ where: { id } });
+    return deleteRole;
+  } else if (url === 'employee') {
+    const deleteEmployee = await Employee.destroy({ where: { id } });
+    return deleteEmployee;
+  } else {
+    console.log('Something went wrong');
+  }
+}
+
 exports.dataQueryGetAll = dataQueryGetAll;
+exports.dataQueryGetOne = dataQueryGetOne;
 exports.dataQueryPostDepartment = dataQueryPostDepartment;
 exports.dataQueryPostRole = dataQueryPostRole;
 exports.dataQueryPostEmployee = dataQueryPostEmployee;
 exports.dataQueryPutRole = dataQueryPutRole;
+exports.dataQueryDeleteMaster = dataQueryDeleteMaster;

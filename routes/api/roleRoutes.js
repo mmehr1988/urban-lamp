@@ -1,11 +1,14 @@
 const router = require('express').Router();
 const Role = require('../../models/Role');
+const Employee = require('../../models/Employee');
 
 // GET all role
 router.get('/', async (req, res) => {
   // Get all role from the role table
   try {
-    const roleData = await Role.findAll();
+    const roleData = await Role.findAll({
+      include: [{ model: Employee }],
+    });
     return res.json(roleData);
   } catch (err) {
     console.log(err);
@@ -18,7 +21,12 @@ router.get('/:id', async (req, res) => {
   // Get one role from the role table based on id
   const id = req.params.id;
   try {
-    const role = await Role.findOne({ where: { id } });
+    const role = await Role.findOne(
+      { where: { id } },
+      {
+        include: [{ model: Employee }],
+      }
+    );
     return res.json(role);
   } catch (err) {
     console.log(err);

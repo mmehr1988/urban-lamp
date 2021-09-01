@@ -48,4 +48,16 @@ const Employee = require('./Employee');
 //   as: 'department_roles',
 // });
 
+// Products belongToMany Tags (through ProductTag)
+// Department.belongsToMany(Employee, {
+//   through: Role,
+//   foreignKey: 'role_id',
+// });
+
+// Tags belongToMany Products (through ProductTag)
+//   Tag.belongsToMany(Product, {
+//     through: ProductTag,
+//     foreignKey: 'tag_id'
+//   });
+
 module.exports = { Department, Role, Employee };

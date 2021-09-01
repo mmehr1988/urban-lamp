@@ -1,11 +1,15 @@
 const router = require('express').Router();
 const Department = require('../../models/Department');
+const Role = require('../../models/Role');
+const Employee = require('../../models/Employee');
 
 // GET all department
 router.get('/', async (req, res) => {
   // Get all department from the department table
   try {
-    const departmentData = await Department.findAll();
+    const departmentData = await Department.findAll({
+      include: [{ model: Role }],
+    });
     return res.json(departmentData);
   } catch (err) {
     console.log(err);
@@ -18,7 +22,12 @@ router.get('/:id', async (req, res) => {
   // Get one department from the department table based on id
   const id = req.params.id;
   try {
-    const department = await Department.findOne({ where: { id } });
+    const department = await Department.findOne(
+      { where: { id } },
+      {
+        include: [{ model: Role }],
+      }
+    );
     return res.json(department);
   } catch (err) {
     console.log(err);

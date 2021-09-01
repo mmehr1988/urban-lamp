@@ -2,6 +2,8 @@
 
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
+// const Employee = require('./Employee');
+// const Role = require('./Role');
 
 class Department extends Model {}
 
@@ -26,5 +28,15 @@ Department.init(
     modelName: 'department',
   }
 );
+
+// Department.belongsToMany(Employee, {
+//   through: Role,
+//   foreignKey: 'role_id',
+// });
+
+// Employee.hasOne(Department, {
+//   through: Role,
+//   foreignKey: 'role_id',
+// });
 
 module.exports = Department;
