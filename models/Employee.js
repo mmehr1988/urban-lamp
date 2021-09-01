@@ -2,6 +2,7 @@
 
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
+const Role = require('./Role');
 
 class Employee extends Model {}
 
@@ -53,6 +54,20 @@ Employee.init(
 //     COMPLETE FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
 Employee.belongsTo(Employee, {
   foreignKey: 'manager_id',
+  as: 'employee',
+});
+
+Employee.hasMany(Employee, {
+  foreignKey: 'manager_id',
+  as: 'manager',
+});
+
+Role.hasMany(Employee, {
+  foreignKey: 'role_id',
+});
+
+Employee.belongsTo(Role, {
+  foreignKey: 'role_id',
 });
 
 module.exports = Employee;
