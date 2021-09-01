@@ -22,7 +22,7 @@ app.use(routes);
 ////////////////////////////////////////////////////////////
 
 const { masterQuestions } = require('./lib/Questions.js');
-const { dataQueryGetAll, dataQueryGetOne, dataQueryPostDepartment, dataQueryPostRole, dataQueryPostEmployee, dataQueryPutRole, dataQueryDeleteMaster } = require('./query/queryMaster.js');
+const { dataQueryGetAll, dataQueryGetAllRaw, dataQueryGetOne, dataQueryPostDepartment, dataQueryPostRole, dataQueryPostEmployee, dataQueryPutRole, dataQueryDeleteMaster } = require('./query/queryMaster.js');
 
 ////////////////////////////////////////////////////////////
 // PROMPTS: CONFIRM
@@ -64,6 +64,9 @@ async function confirmQuery() {
       break;
     case 'Get Employee By Manager':
       await byEmployeeManager();
+      break;
+    case 'Get Employee By Department':
+      await byEmployeeDepartment();
       break;
     default:
       console.log('Try Again');
@@ -277,6 +280,43 @@ async function byEmployeeManager() {
   console.log(`The below employees report to Manager ${qEmployeeManager.byManagerName}`);
 
   console.table(filtered);
+  await confirmQuery();
+}
+
+////////////////////////////////////////////////////////////
+// PROMPTS: EMPLOYEE BY DEPARTMENT // COMPLETE
+////////////////////////////////////////////////////////////
+
+async function byEmployeeDepartment() {
+  const qEmployeeDepartment = await inquirer.prompt(masterQuestions.byEmployeeDepartment);
+
+  // Department Id Query based On Existing Departments
+  const getDepartmentsRaw = await dataQueryGetAllRaw('department');
+  const getDepartments = await dataQueryGetAll('department');
+  const getEmployees = await dataQueryGetAll('employee');
+
+  let departmentId = '';
+  getDepartments.forEach(function (v, i, r) {
+    if (v.name === qEmployeeDepartment.byDepartmentName) {
+      departmentId = v.id;
+    } else {
+      return 'nothing';
+    }
+  });
+
+  const specificDepartment = JSON.stringify(getDepartmentsRaw[departmentId - 1]);
+  const departmentJSON = JSON.parse(specificDepartment)['roles'];
+
+  let employeesData = [];
+  departmentJSON.forEach(function (item) {
+    // console.log(item.id);
+
+    const arrayToPush = getEmployees.filter((el) => el.role_id === item.id);
+    employeesData.push(...arrayToPush);
+  });
+
+  console.log(`Employees that belong to department ${qEmployeeDepartment.byDepartmentName}`);
+  console.table(employeesData);
   await confirmQuery();
 }
 

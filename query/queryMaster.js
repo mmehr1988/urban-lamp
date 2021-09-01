@@ -24,6 +24,29 @@ async function dataQueryGetAll(url) {
 }
 
 ////////////////////////////////////////////////////////////
+// GET = READ RAW
+////////////////////////////////////////////////////////////
+
+async function dataQueryGetAllRaw(url) {
+  if (url === 'department') {
+    const departments = await Department.findAll({
+      include: [{ model: Role }],
+    });
+    return departments;
+  } else if (url === 'role') {
+    const roles = await Role.findAll({
+      include: [{ model: Employee }],
+    });
+    return JSON.stringify(roles);
+  } else if (url === 'employee') {
+    const employees = await Employee.findAll();
+    return JSON.stringify(employees);
+  } else {
+    console.log('Something went wrong');
+  }
+}
+
+////////////////////////////////////////////////////////////
 // GET ONE = READ
 ////////////////////////////////////////////////////////////
 
@@ -124,3 +147,4 @@ exports.dataQueryPostRole = dataQueryPostRole;
 exports.dataQueryPostEmployee = dataQueryPostEmployee;
 exports.dataQueryPutRole = dataQueryPutRole;
 exports.dataQueryDeleteMaster = dataQueryDeleteMaster;
+exports.dataQueryGetAllRaw = dataQueryGetAllRaw;
