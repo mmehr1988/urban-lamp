@@ -1,8 +1,6 @@
 'use strict';
 
-const Department = require('../models/Department');
-const Employee = require('../models/Employee');
-const Role = require('../models/Role');
+const { Department, Role, Employee } = require('../models');
 
 ////////////////////////////////////////////////////////////
 // GET = READ

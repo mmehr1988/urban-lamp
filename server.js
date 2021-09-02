@@ -8,6 +8,8 @@ const cTable = require('console.table');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const models = require('./models');
+
 ////////////////////////////////////////////////////////////
 // FILE PATH: QUESTIONS
 ////////////////////////////////////////////////////////////

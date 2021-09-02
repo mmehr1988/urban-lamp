@@ -1,8 +1,6 @@
 const sequelize = require('../config/connection');
 
-const Department = require('../models/Department');
-const Role = require('../models/Role');
-const Employee = require('../models/Employee');
+const { Department, Role, Employee } = require('../models');
 
 const departmentSeedData = require('./departmentSeedData.json');
 const roleSeedData = require('./roleSeedData.json');
