@@ -69,6 +69,8 @@ This is a Node.js command-line application that utilizes Sequelize to interact w
 
   6.  Once you hit enter, the correct dependencies for allowing you to use this application will be automatically installed.
 
+  7.  The final step is to update the .env.EXAMPLE file with your MySQL password and user info. Please ensure you also remove the ".EXAMPLE" from the file path.
+
 ## Usage
 
 - Once you've completed the installation section guidelines, to run the application type the below command.
