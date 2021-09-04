@@ -25,7 +25,7 @@ const { confirmQuery } = require('./lib/Prompts.js');
 async function main() {
   try {
     await sequelize.sync({ force: false });
-    // await app.listen(PORT);
+    await app.listen(PORT);
     await confirmQuery();
   } catch (err) {
     console.log(err);
