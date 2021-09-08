@@ -82,5 +82,12 @@
     "last_name": "Pop",
     "role_id": 8,
     "manager_id": 4
+  },
+  {
+    "id": 13,
+    "first_name": "John",
+    "last_name": "Puck",
+    "role_id": 1,
+    "manager_id": null
   }
 ]
