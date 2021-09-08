@@ -1,8 +1,6 @@
 # urban-lamp
 
-# super-octo-bassoon
-
-## Project Title: Team Profile Generator
+## Project Title: Employee Tracker
 
 <a href="https://choosealicense.com/licenses/mit" target="_blank"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
 
