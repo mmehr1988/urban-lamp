@@ -71,17 +71,41 @@ This is a Node.js command-line application that utilizes Sequelize to interact w
 
 ## Usage
 
-- Once you've completed the installation section guidelines, to run the application type the below command.
+- Once you've completed the installation section guidelines, you'll need to first create the database in MySQL before running the application. Follow the below steps and use the image at the end of this section for guidance.
 
-  ```bash
-  node server.js
-  ```
+  1.  Open Terminal in VS Code
 
-- If you would like to use the example company employees, I've placed a json file in the seeds folder and you can save the data to MySQL by running the below command.
+      a. Shortcut = CTRL + `
 
-  ```bash
-    npm run seeds
-  ```
+  2.  Navigate to the folder called 'db'.
+
+  3.  Log into your MySQL and type the below command.
+
+      ```bash
+      source schema.sql
+      ```
+
+  4.  When you've received confirmation that the database has been created, exit MySQL so that you can run the application. Type the below command to exit MySQL.
+
+      ```bash
+      quit
+      ```
+
+  - If you would like to use the example company employees database, I've placed a json file in the seeds folder and you can save the data to MySQL by running the below command. If not, go to step 5.
+
+    ```bash
+      npm run seeds
+    ```
+
+  5.  To run the application, you'll need to navigate back to the main folder where the file `server.js` is saved and type the below command.
+
+      ```bash
+      node server.js
+      ```
+
+### Steps To Create Database In MySQL
+
+![alt text](./img/mysql-database-creation.png)
 
 ## Video
 
